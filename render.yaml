@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: nopcommerce
+    runtime: dotnet
+    runtimeVersion: 9
+    plan: free
+    buildCommand: cd src && dotnet build NopCommerce.sln -c Release
+    startCommand: cd src/Presentation/Nop.Web && dotnet Nop.Web.dll --urls "http://0.0.0.0:10000"
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:10000
+      - key: PORT
+        value: "10000"
