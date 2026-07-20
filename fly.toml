@@ -1,0 +1,40 @@
+# fly.toml file generated for nopcommerce deployment
+app = "nopcommerce-shop"
+primary_region = "sea"
+
+[build]
+  image = "node:18"
+
+[build.args]
+  BUILDKIT_INLINE_CACHE = "1"
+
+[[services]]
+  internal_port = 5000
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    grace_period = "5s"
+    interval = "15s"
+    timeout = "2s"
+
+[env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  ASPNETCORE_URLS = "http://0.0.0.0:5000"
+
+[processes]
+  app = "cd src/Presentation/Nop.Web && dotnet Nop.Web.dll"
